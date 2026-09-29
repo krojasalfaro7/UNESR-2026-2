@@ -28,16 +28,20 @@ const HITOS = [
   { nombre: "Carga de notas y consignación en Control de Estudios", inicio: "2027-02-08", fin: "2027-02-26", nota: "Correo: notasunesrlosteques@gmail.com" },
 ];
 
+// Escala de notas de la oferta ("1-5 Min 4").
+const ESCALA = { min: 1, max: 5, aprobatoria: 4 };
+
 // aula: código de aula asignado a la materia (null = aún sin asignar)
-// evaluaciones: { nombre, fecha: "AAAA-MM-DD", peso: %, nota: 0-20 | null }
+// uc: unidades de crédito; cupo: { inscritos, capacidad } según la oferta del período
+// evaluaciones: { nombre, fecha: "AAAA-MM-DD", peso: %, nota: 1-5 | null }
 // tareas: { titulo, entrega: "AAAA-MM-DD", hecha: bool }
 // material: { titulo, url }
 const MATERIAS = [
   { slug: "contabilidad-i", nombre: "Contabilidad I", codigo: "32041", seccion: "10301", horas: 2,
-    docente: "Bueno Otamendi, Amilcar Jose de Jesus", aula: null, carpeta: "Contabilidad%20I",
+    docente: "Bueno Otamendi, Amilcar Jose de Jesus", aula: "ARMFCG208", uc: 3, cupo: { inscritos: 2, capacidad: 5 }, carpeta: "Contabilidad%20I",
     evaluaciones: [], tareas: [], material: [] },
   { slug: "economia-general", nombre: "Economía General", codigo: "32061", seccion: "10201", horas: 2,
-    docente: "Meza Palma, Sergio Roldan", aula: null, carpeta: "Economia%20General",
+    docente: "Meza Palma, Sergio Roldan", aula: "ARMFCG215", uc: 3, cupo: { inscritos: 4, capacidad: 5 }, carpeta: "Economia%20General",
     evaluaciones: [], tareas: [], material: [] },
 ];
 

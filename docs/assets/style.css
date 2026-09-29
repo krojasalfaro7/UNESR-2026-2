@@ -35,6 +35,15 @@ nav.top a.sga { color: var(--accent); border: 1px solid var(--line); }
 #copiar { background: none; color: var(--muted); border: 1px solid var(--line); border-radius: 99px; padding: 5px 10px; font: inherit; font-size: .8rem; cursor: pointer; white-space: nowrap; }
 #copiar:hover { color: var(--text); border-color: var(--accent); }
 
+.ok { color: #1a7f4b; font-weight: 600; }
+.bad { color: #c62828; font-weight: 600; }
+:root[data-theme="dark"] .ok { color: #5fd18f; }
+:root[data-theme="dark"] .bad { color: #ff7b7b; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .ok { color: #5fd18f; }
+  :root:not([data-theme="light"]) .bad { color: #ff7b7b; }
+}
+
 .tl { list-style: none; margin: 0; padding: 0; }
 .tl li { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--line); }
 .tl li:last-child { border-bottom: 0; }

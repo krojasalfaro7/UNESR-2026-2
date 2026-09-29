@@ -42,7 +42,7 @@
   const kpis = arr => arr.map(([v, l]) => `<div class="kpi"><b>${v}</b><span>${l}</span></div>`).join("");
 
   // ---- Horario (compartido) ----
-  function horario(clases, colorDe) {
+  function horario(clases, colorDe, etiquetaDe = a => a) {
     if (!clases.length) return vacio("Sin horario asignado todavía.");
     const usados = clases.map(c => c[1]);
     const desde = Math.min(...usados) - 1, hasta = Math.max(...usados) + 1;
@@ -52,7 +52,7 @@
       if (!usados.includes(b) && b !== desde && b !== hasta) return;
       h += `<tr><td class="hora">${hora}</td>` + DIAS.map((_, d) => {
         const c = clases.find(x => x[0] === d && x[1] === b);
-        return c ? `<td><div class="cls" style="background:${colorDe(c[2])}">${c[2]}<small>${c[3]}</small></div></td>` : "<td></td>";
+        return c ? `<td><div class="cls" style="background:${colorDe(c[2])}">${etiquetaDe(c[2])}<small>${c[3]}</small></div></td>` : "<td></td>";
       }).join("") + "</tr>";
     });
     return `<div class="scroll"><table class="grid">${h}</table></div>`;
@@ -120,7 +120,8 @@
     $("mats").innerHTML = MATERIAS.map(m =>
       `<a class="mat" href="${m.slug}/"><b>${m.nombre}</b><span>${m.codigo} · sección ${m.seccion} · ${m.horas} h</span><span>${m.docente}</span></a>`).join("");
     $("hitos").innerHTML = timeline(hs);
-    $("horario").innerHTML = horario(CLASES, a => COLORES[a] || "var(--accent)");
+    const nombreDe = a => (MATERIAS.find(m => m.aula === a) || {}).nombre || a;
+    $("horario").innerHTML = horario(CLASES, a => COLORES[a] || "var(--accent)", nombreDe);
     $("enlaces").innerHTML = enlaces();
   }
 
@@ -133,11 +134,14 @@
     $("sub").textContent = `${m.codigo} · sección ${m.seccion} · ${m.docente}`;
     const pend = m.tareas.filter(t => !t.hecha).length;
     const notas = m.evaluaciones.filter(e => e.nota != null);
-    const acum = notas.reduce((s, e) => s + e.nota * e.peso / 100, 0);
+    const pesoEval = notas.reduce((s, e) => s + e.peso, 0);
+    const prom = pesoEval ? notas.reduce((s, e) => s + e.nota * e.peso, 0) / pesoEval : null;
+    const cls = n => n >= ESCALA.aprobatoria ? "ok" : "bad";
     $("kpis").innerHTML = kpis([
       [m.evaluaciones.length, "evaluaciones"],
       [pend, "tareas pendientes"],
-      [notas.length ? acum.toFixed(1) : "—", "nota acumulada (sobre 20)"],
+      [prom != null ? `<span class="${cls(prom)}">${prom.toFixed(1)}</span>` : "—",
+        `promedio ponderado (escala ${ESCALA.min}–${ESCALA.max}, mínimo ${ESCALA.aprobatoria})`],
       [m.material.length, "recursos de material"],
     ]);
 
@@ -145,6 +149,9 @@
       <tr><th>Código</th><td>${m.codigo}</td></tr>
       <tr><th>Sección</th><td>${m.seccion}</td></tr>
       <tr><th>Horas semanales</th><td>${m.horas}</td></tr>
+      <tr><th>Unidades de crédito</th><td>${m.uc}</td></tr>
+      <tr><th>Cupo</th><td>${m.cupo.inscritos} inscritos de ${m.cupo.capacidad}</td></tr>
+      <tr><th>Aula</th><td>${m.aula || "Sin asignar"}</td></tr>
       <tr><th>Docente</th><td>${m.docente}</td></tr>
     </tbody></table>`;
 
@@ -156,7 +163,7 @@
 
     $("evals").innerHTML = m.evaluaciones.length
       ? `<div class="scroll"><table><thead><tr><th>Evaluación</th><th>Fecha</th><th>Peso</th><th>Nota</th></tr></thead><tbody>${
-          m.evaluaciones.map(e => `<tr><td>${e.nombre}</td><td>${e.fecha ? fmt(new Date(e.fecha + "T00:00")) : "—"}</td><td>${e.peso}%</td><td>${e.nota ?? "—"}</td></tr>`).join("")
+          m.evaluaciones.map(e => `<tr><td>${e.nombre}</td><td>${e.fecha ? fmt(new Date(e.fecha + "T00:00")) : "—"}</td><td>${e.peso}%</td><td>${e.nota == null ? "—" : `<span class="${cls(e.nota)}">${e.nota}</span>`}</td></tr>`).join("")
         }</tbody></table></div>`
       : vacio("Todavía no hay evaluaciones registradas.");
 

@@ -17,12 +17,12 @@ SGA: https://sga.unesr.edu.ve/#/
 
 ## Horario
 
-| Día | Hora | Aula | Ambiente |
-|-----|------|------|----------|
-| Jueves | 05:00 - 06:20 pm | ARMFCG215 | Ambiente 21 |
-| Sábado | 08:40 - 10:00 am | ARMFCG208 | Ambiente 10 |
+| Día | Hora | Materia | Aula | Ambiente |
+|-----|------|---------|------|----------|
+| Jueves | 05:00 - 06:20 pm | Economía General | ARMFCG215 | Ambiente 21 |
+| Sábado | 08:40 - 10:00 am | Contabilidad I | ARMFCG208 | Ambiente 10 |
 
-Pendiente: asignar cada aula a su materia (las constancias no lo indican).
+Escala de notas: 1 a 5, mínimo aprobatorio 4. Cada materia tiene 3 unidades de crédito.
 
 ## Estructura
 
