@@ -21,6 +21,10 @@ const auth = getAuth(app);
 const db = initializeFirestore(app, { experimentalAutoDetectLongPolling: true });
 const ref = doc(db, "privado", "datos");
 
+const proveedor = new GoogleAuthProvider();
+// Preselecciona tu cuenta para saltarse el selector de cuentas de Google.
+proveedor.setCustomParameters({ login_hint: OWNER });
+
 const $ = id => document.getElementById(id);
 const emit = detail => document.dispatchEvent(new CustomEvent("sesion", { detail }));
 const btn = $("sesion");
@@ -86,7 +90,9 @@ btn.onclick = () => {
   if (auth.currentUser) return signOut(auth);
   t0 = performance.now();
   btn.textContent = "Abriendo Google…";
-  return signInWithPopup(auth, new GoogleAuthProvider()).catch(e => {
+  return signInWithPopup(auth, proveedor).then(() => {
+    console.info(`[privado] popup resuelto a los ${Math.round(performance.now() - t0)} ms`);
+  }).catch(e => {
     btn.textContent = "Iniciar sesión";
     if (e.code !== "auth/popup-closed-by-user" && e.code !== "auth/cancelled-popup-request") console.error(e);
   });
@@ -105,4 +111,24 @@ if (guardar) guardar.onclick = async () => {
   } catch (e) {
     mensaje("No se pudo guardar: " + e.code);
   }
+};
+
+// Importa el bloque "perfil" de un archivo .json local y lo fusiona con lo que ya hay (no toca notas ni tareas).
+const importar = $("importar");
+if (importar) importar.onchange = async () => {
+  const f = importar.files[0];
+  if (!f) return;
+  try {
+    const j = JSON.parse(await f.text());
+    if (!j.perfil || typeof j.perfil !== "object") return mensaje('El archivo no tiene un bloque "perfil".');
+    await setDoc(ref, { perfil: j.perfil }, { merge: true });
+    datos = { ...datos, perfil: { ...datos.perfil, ...j.perfil } };
+    const ta = $("json");
+    if (ta) ta.value = JSON.stringify(datos, null, 2);
+    mensaje("Perfil importado.");
+    emit(datos);
+  } catch (e) {
+    mensaje("No se pudo importar: " + (e.code || e.message));
+  }
+  importar.value = "";
 };
