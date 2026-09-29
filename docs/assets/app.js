@@ -4,6 +4,8 @@
   const $ = id => document.getElementById(id);
   const fmt = d => d.toLocaleDateString("es-VE", { day: "numeric", month: "short", year: "numeric" });
   const hoy = new Date();
+  let privado = false;
+  const esc = t => String(t).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   // Datos públicos originales, para restaurarlos al cerrar sesión.
   const base = MATERIAS.map(m => ({ evaluaciones: m.evaluaciones, tareas: m.tareas, material: m.material }));
 
@@ -163,26 +165,91 @@
       $("horario").innerHTML = vacio("Aún no está asignada el aula de esta materia. Ver el horario general en Home.");
     }
 
-    $("evals").innerHTML = m.evaluaciones.length
-      ? `<div class="scroll"><table><thead><tr><th>Evaluación</th><th>Fecha</th><th>Peso</th><th>Nota</th></tr></thead><tbody>${
-          m.evaluaciones.map(e => `<tr><td>${e.nombre}</td><td>${e.fecha ? fmt(new Date(e.fecha + "T00:00")) : "—"}</td><td>${e.peso}%</td><td>${e.nota == null ? "—" : `<span class="${cls(e.nota)}">${e.nota}</span>`}</td></tr>`).join("")
-        }</tbody></table></div>`
-      : vacio("Todavía no hay evaluaciones registradas.");
+    // Evaluaciones, tareas y material: solo se pueden editar con la sesión abierta.
+    const edit = privado && window.PRIV;
+    const msg = t => { const el = $("msg-mat"); if (el) el.textContent = t; };
+    const guardar = async (campo, arr) => {
+      msg("Guardando…");
+      try { await window.PRIV.guardar(m.slug, campo, arr); msg(""); }
+      catch (e) { msg("No se pudo guardar: " + (e.code || e.message)); }
+    };
+    const porFecha = k => (a, b) => (a[k] || "9999").localeCompare(b[k] || "9999");
+    const fechaTxt = f => f ? fmt(new Date(f + "T00:00")) : "—";
+    const del = (attr, campo, lista, texto) => $(campo).querySelectorAll(`[${attr}]`).forEach(b => b.onclick = () => {
+      if (confirm(texto)) guardar(campo === "evals" ? "evaluaciones" : campo, lista.filter((_, i) => i !== Number(b.getAttribute(attr))));
+    });
+    const x = attr => i => edit ? `<td><button class="x" ${attr}="${i}" title="Borrar" aria-label="Borrar">✕</button></td>` : "";
 
-    $("tareas").innerHTML = m.tareas.length
-      ? `<div class="scroll"><table><thead><tr><th>Tarea</th><th>Entrega</th><th>Estado</th></tr></thead><tbody>${
-          m.tareas.map(t => `<tr><td>${t.titulo}</td><td>${t.entrega ? fmt(new Date(t.entrega + "T00:00")) : "—"}</td><td>${t.hecha ? "Hecha" : "Pendiente"}</td></tr>`).join("")
+    // Evaluaciones
+    const pesoTotal = m.evaluaciones.reduce((s, e) => s + e.peso, 0);
+    $("evals").innerHTML = (m.evaluaciones.length
+      ? `<div class="scroll"><table><thead><tr><th>Evaluación</th><th>Fecha</th><th>Peso</th><th>Nota</th>${edit ? "<th></th>" : ""}</tr></thead><tbody>${
+          m.evaluaciones.map((e, i) => `<tr><td>${esc(e.nombre)}</td><td>${fechaTxt(e.fecha)}</td><td>${e.peso}%</td><td>${
+            edit ? `<input class="mini" type="number" min="${ESCALA.min}" max="${ESCALA.max}" step="0.1" value="${e.nota ?? ""}" data-nota="${i}" aria-label="Nota">`
+                 : e.nota == null ? "—" : `<span class="${cls(e.nota)}">${e.nota}</span>`}</td>${x("data-del-eval")(i)}</tr>`).join("")
         }</tbody></table></div>`
-      : vacio("Todavía no hay tareas registradas.");
+      : vacio("Todavía no hay evaluaciones registradas."))
+      + (edit && m.evaluaciones.length && pesoTotal !== 100 ? `<p class="muted">Peso total registrado: ${pesoTotal}% (debería sumar 100%).</p>` : "")
+      + (edit ? `<form class="frm" id="f-eval"><input name="nombre" placeholder="Evaluación" required>
+          <input name="fecha" type="date" aria-label="Fecha"><input class="mini" name="peso" type="number" min="1" max="100" placeholder="Peso %" required>
+          <input class="mini" name="nota" type="number" min="${ESCALA.min}" max="${ESCALA.max}" step="0.1" placeholder="Nota"><button class="btn">Agregar</button></form>` : "");
 
+    // Tareas
+    $("tareas").innerHTML = (m.tareas.length
+      ? `<div class="scroll"><table><thead><tr><th>Tarea</th><th>Entrega</th><th>Estado</th>${edit ? "<th></th>" : ""}</tr></thead><tbody>${
+          m.tareas.map((t, i) => `<tr><td>${esc(t.titulo)}</td><td>${fechaTxt(t.entrega)}</td><td>${
+            edit ? `<label><input type="checkbox" data-hecha="${i}" ${t.hecha ? "checked" : ""}> Hecha</label>` : t.hecha ? "Hecha" : "Pendiente"}</td>${x("data-del-tarea")(i)}</tr>`).join("")
+        }</tbody></table></div>`
+      : vacio("Todavía no hay tareas registradas."))
+      + (edit ? `<form class="frm" id="f-tarea"><input name="titulo" placeholder="Tarea" required>
+          <input name="entrega" type="date" aria-label="Entrega"><button class="btn">Agregar</button></form>` : "");
+
+    // Material (por enlace)
     const carpeta = `<p><a href="${REPO}${m.carpeta}">Abrir carpeta de la materia en GitHub</a></p>`;
     $("material").innerHTML = carpeta + (m.material.length
-      ? `<ul>${m.material.map(x => `<li><a href="${x.url}">${x.titulo}</a></li>`).join("")}</ul>`
-      : vacio("Todavía no hay material cargado."));
+      ? `<ul>${m.material.map((it, i) => `<li><a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.titulo)} ↗</a>${
+          edit ? ` <button class="x" data-del-mat="${i}" title="Borrar" aria-label="Borrar">✕</button>` : ""}</li>`).join("")}</ul>`
+      : vacio("Todavía no hay material cargado."))
+      + (edit ? `<form class="frm" id="f-mat"><input name="titulo" placeholder="Título" required>
+          <input name="url" type="url" placeholder="https://…" required><button class="btn">Agregar</button></form>` : "");
+
+    if (!edit) return;
+
+    $("f-eval").onsubmit = ev => {
+      ev.preventDefault();
+      const f = new FormData(ev.target), nota = f.get("nota");
+      guardar("evaluaciones", [...m.evaluaciones, { nombre: f.get("nombre").trim(), fecha: f.get("fecha") || null,
+        peso: Number(f.get("peso")), nota: nota === "" ? null : Number(nota) }].sort(porFecha("fecha")));
+    };
+    $("evals").querySelectorAll("[data-nota]").forEach(inp => inp.onchange = () => {
+      const v = inp.value === "" ? null : Number(inp.value);
+      if (v != null && (v < ESCALA.min || v > ESCALA.max)) return msg(`La nota debe estar entre ${ESCALA.min} y ${ESCALA.max}.`);
+      guardar("evaluaciones", m.evaluaciones.map((e, i) => i === Number(inp.dataset.nota) ? { ...e, nota: v } : e));
+    });
+    del("data-del-eval", "evals", m.evaluaciones, "¿Borrar esta evaluación?");
+
+    $("f-tarea").onsubmit = ev => {
+      ev.preventDefault();
+      const f = new FormData(ev.target);
+      guardar("tareas", [...m.tareas, { titulo: f.get("titulo").trim(), entrega: f.get("entrega") || null, hecha: false }].sort(porFecha("entrega")));
+    };
+    $("tareas").querySelectorAll("[data-hecha]").forEach(c => c.onchange = () =>
+      guardar("tareas", m.tareas.map((t, i) => i === Number(c.dataset.hecha) ? { ...t, hecha: c.checked } : t)));
+    del("data-del-tarea", "tareas", m.tareas, "¿Borrar esta tarea?");
+
+    $("f-mat").onsubmit = ev => {
+      ev.preventDefault();
+      const f = new FormData(ev.target), url = f.get("url").trim();
+      if (!/^https?:\/\//i.test(url)) return msg("El enlace debe empezar por http:// o https://");
+      guardar("material", [...m.material, { titulo: f.get("titulo").trim(), url }]);
+    };
+    del("data-del-mat", "material", m.material, "¿Quitar este material?");
   }
 
   // ---- Datos privados (llegan desde assets/privado.js tras iniciar sesión) ----
-  const ETIQUETAS = { condicion: "Condición", ingreso: "Ingreso", plan: "Plan", titulo: "Título", turno: "Turno", promedio: "Promedio (1–5)" };
+  const ETIQUETAS = { nombre: "Nombre", nucleo: "Núcleo", plan: "Plan", titulo: "Título", condicion: "Condición", estado: "Estado",
+    ingreso: "Fecha de ingreso", periodo_ingreso: "Período de ingreso", tipo_matricula: "Tipo de matrícula", turno: "Turno",
+    promedio: "Promedio (1–5)", observacion: "Observación" };
   function perfil(d) {
     const card = $("card-privado");
     if (!card) return;
@@ -195,6 +262,7 @@
   }
   document.addEventListener("sesion", e => {
     const d = e.detail;
+    privado = !!d;
     MATERIAS.forEach((m, i) => {
       const p = (d && d.materias && d.materias[m.slug]) || {};
       m.evaluaciones = p.evaluaciones || base[i].evaluaciones;

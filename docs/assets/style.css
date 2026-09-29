@@ -92,3 +92,10 @@ footer { color: var(--muted); font-size: .8rem; margin-top: 24px; }
   border: 1px solid var(--line); border-radius: 8px; padding: 10px; }
 details summary { cursor: pointer; color: var(--accent); margin: 12px 0 8px; }
 .btn { background: var(--accent); color: #fff; border: 0; border-radius: 99px; padding: 6px 16px; font: inherit; cursor: pointer; }
+
+.frm { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.frm input { font: inherit; background: var(--bg); color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; min-width: 0; }
+.frm input[name="nombre"], .frm input[name="titulo"], .frm input[name="url"] { flex: 1 1 180px; }
+.mini { width: 5.5rem; font: inherit; background: var(--bg); color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 4px 6px; }
+.x { background: none; border: 0; color: var(--muted); cursor: pointer; font: inherit; }
+.x:hover { color: #c62828; }
