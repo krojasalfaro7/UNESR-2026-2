@@ -9,6 +9,13 @@ const SITIO = {
   sga: "https://sga.unesr.edu.ve/#/",
 };
 
+// Enlaces útiles del Home.
+const ENLACES = [
+  { titulo: "SGA", url: SITIO.sga, nota: "Portal de la UNESR" },
+  { titulo: "Instagram del Núcleo Los Teques", url: "https://www.instagram.com/unesr.losteques.oficial/", nota: "@unesr.losteques.oficial · cuenta oficial del núcleo" },
+  { titulo: "Facebook del Núcleo Los Teques", url: "https://www.facebook.com/unesr.losteques.oficial/", nota: "Unesr Los Teques Ofic" },
+];
+
 // Hitos del calendario académico. fin: null = fecha única.
 const HITOS = [
   { nombre: "Modificación de inscripción", inicio: "2026-09-28", fin: "2026-10-03" },

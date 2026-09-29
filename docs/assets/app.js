@@ -88,6 +88,13 @@
     }).join("")}</ul>`;
   }
 
+  // ---- Enlaces útiles ----
+  function enlaces() {
+    if (!ENLACES.length) return vacio("Todavía no hay enlaces.");
+    return `<ul>${ENLACES.map(e =>
+      `<li><a href="${e.url}" target="_blank" rel="noopener">${e.titulo} ↗</a> <span class="muted">${e.nota}</span></li>`).join("")}</ul>`;
+  }
+
   // ---- Home ----
   function home() {
     document.title = `UNESR 2026-2 · Home`;
@@ -114,6 +121,7 @@
       `<a class="mat" href="${m.slug}/"><b>${m.nombre}</b><span>${m.codigo} · sección ${m.seccion} · ${m.horas} h</span><span>${m.docente}</span></a>`).join("");
     $("hitos").innerHTML = timeline(hs);
     $("horario").innerHTML = horario(CLASES, a => COLORES[a] || "var(--accent)");
+    $("enlaces").innerHTML = enlaces();
   }
 
   // ---- Materia ----
