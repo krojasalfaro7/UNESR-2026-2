@@ -52,7 +52,7 @@
       if (!usados.includes(b) && b !== desde && b !== hasta) return;
       h += `<tr><td class="hora">${hora}</td>` + DIAS.map((_, d) => {
         const c = clases.find(x => x[0] === d && x[1] === b);
-        return c ? `<td><div class="cls" style="background:${colorDe(c[2])}">${etiquetaDe(c[2])}<small>${c[3]}</small></div></td>` : "<td></td>";
+        return c ? `<td><div class="cls" style="background:${colorDe(c[2])}">${etiquetaDe(c[2])}<small>${c[2]} · ${c[3]}</small></div></td>` : "<td></td>";
       }).join("") + "</tr>";
     });
     return `<div class="scroll"><table class="grid">${h}</table></div>`;
@@ -156,7 +156,7 @@
     </tbody></table>`;
 
     if (m.aula) {
-      $("horario").innerHTML = horario(CLASES.filter(c => c[2] === m.aula), () => "var(--accent)");
+      $("horario").innerHTML = horario(CLASES.filter(c => c[2] === m.aula), () => "var(--accent)", () => m.nombre);
     } else {
       $("horario").innerHTML = vacio("Aún no está asignada el aula de esta materia. Ver el horario general en Home.");
     }
