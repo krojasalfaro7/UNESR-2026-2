@@ -11,17 +11,26 @@
     --a: #1f5fa8; --b: #c2570c; --warn: #fff4d6; --warn-line: #e6c56a;
   }
   @media (prefers-color-scheme: dark) {
-    :root {
+    :root:not([data-theme="light"]) {
       --bg: #12161b; --card: #1a2028; --text: #e6e9ed; --muted: #99a3b0;
       --line: #2b333d; --accent: #6aa7ec; --accent-soft: #1d2b3d;
       --a: #6aa7ec; --b: #f0925a; --warn: #33290f; --warn-line: #6b5820;
     }
   }
+  :root[data-theme="dark"] {
+      --bg: #12161b; --card: #1a2028; --text: #e6e9ed; --muted: #99a3b0;
+      --line: #2b333d; --accent: #6aa7ec; --accent-soft: #1d2b3d;
+      --a: #6aa7ec; --b: #f0925a; --warn: #33290f; --warn-line: #6b5820;
+  }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--bg); color: var(--text);
     font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
   main { max-width: 960px; margin: 0 auto; padding: 24px 16px 48px; }
+  header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
   h1 { font-size: 1.6rem; margin: 0; }
+  #tema { background: var(--card); color: var(--text); border: 1px solid var(--line); border-radius: 99px;
+    padding: 6px 14px; font: inherit; font-size: .88rem; cursor: pointer; white-space: nowrap; }
+  #tema:hover { border-color: var(--accent); }
   h2 { font-size: 1.05rem; margin: 0 0 12px; }
   .sub { color: var(--muted); margin: 4px 0 24px; }
   .card { background: var(--card); border: 1px solid var(--line);
@@ -49,8 +58,13 @@
 </head>
 <body>
 <main>
-  <h1>Semestre 2026-2</h1>
-  <p class="sub">UNESR · Núcleo Los Teques · Administración mención Informática (plan 1982)</p>
+  <header>
+    <div>
+      <h1>Semestre 2026-2</h1>
+      <p class="sub">UNESR · Núcleo Los Teques · Administración mención Informática (plan 1982)</p>
+    </div>
+    <button id="tema" type="button" aria-label="Cambiar tema"></button>
+  </header>
 
   <section class="kpis" id="kpis"></section>
 
@@ -79,6 +93,20 @@
 </main>
 
 <script>
+// ---- Tema ----
+const raiz = document.documentElement, btn = document.getElementById("tema");
+const oscuroSistema = matchMedia("(prefers-color-scheme: dark)");
+function temaActual() { return raiz.dataset.theme || (oscuroSistema.matches ? "dark" : "light"); }
+function pintarBoton() { btn.textContent = temaActual() === "dark" ? "☀️ Modo claro" : "🌙 Modo oscuro"; }
+try { const t = localStorage.getItem("tema"); if (t) raiz.dataset.theme = t; } catch (e) {}
+btn.onclick = () => {
+  const t = temaActual() === "dark" ? "light" : "dark";
+  raiz.dataset.theme = t;
+  try { localStorage.setItem("tema", t); } catch (e) {}
+  pintarBoton();
+};
+pintarBoton();
+
 // ---- Datos ----
 const lapso = { inicio: "2026-09-27", fin: "2027-02-12" };
 const materias = [
