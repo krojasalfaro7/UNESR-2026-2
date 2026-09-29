@@ -33,6 +33,6 @@ Escala de notas: 1 a 5, mínimo aprobatorio 4. Cada materia tiene 3 unidades de 
   - `assets/app.js`, `assets/style.css`: lógica, navegación y estilos compartidos.
 - `Contabilidad I/`, `Economia General/`: archivos de cada materia (apuntes, PDFs, etc.).
 - `Documentos/CALENDARIO.md`: calendario académico administrativo 2026-2 (los hitos que muestra la página están en `HITOS` de `assets/data.js`).
-- Constancias de estudios e inscripción (PDF).
+- `privado/`: documentos personales (constancias, datos de la API). Está en `.gitignore` y no se sube al repo.
 
 Para agregar una materia nueva: añadirla en `MATERIAS` dentro de `assets/data.js` y copiar una carpeta de `docs/` cambiando `data-materia` por el nuevo `slug`.
