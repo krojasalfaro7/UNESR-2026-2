@@ -18,9 +18,9 @@
   // ---- Navegación ----
   const links = [`<a href="${root || "./"}" class="${slug ? "" : "on"}">Home</a>`]
     .concat(MATERIAS.map(m => `<a href="${root}${m.slug}/" class="${m.slug === slug ? "on" : ""}">${m.nombre}</a>`));
-  $("nav").innerHTML = `<div class="in">${links.join("")}<span class="sp"></span><a class="sga" href="${SITIO.sga}" target="_blank" rel="noopener">SGA ↗</a><button id="sesion" type="button">Iniciar sesión</button><button id="copiar" type="button" title="Copiar enlace del SGA">Copiar enlace</button><button id="tema" type="button" aria-label="Cambiar tema"></button></div>`;
+  $("nav").innerHTML = `<div class="in"><div class="links">${links.join("")}</div><div class="acts"><a class="sga" href="${SITIO.sga}" target="_blank" rel="noopener">SGA ↗</a><button id="sesion" type="button">Iniciar sesión</button><button id="copiar" type="button" title="Copiar enlace del SGA">Copiar SGA</button><button id="tema" type="button" aria-label="Cambiar tema"></button></div></div>`;
   const btn = $("tema");
-  const pintar = () => { btn.textContent = temaActual() === "dark" ? "☀️ Modo claro" : "🌙 Modo oscuro"; };
+  const pintar = () => { btn.textContent = temaActual() === "dark" ? "☀️ Claro" : "🌙 Oscuro"; };
   btn.onclick = () => {
     const t = temaActual() === "dark" ? "light" : "dark";
     raiz.dataset.theme = t;
@@ -39,7 +39,7 @@
       t.remove();
     }
     b.textContent = "¡Copiado!";
-    setTimeout(() => { b.textContent = "Copiar enlace"; }, 1500);
+    setTimeout(() => { b.textContent = "Copiar SGA"; }, 1500);
   };
 
   const vacio = t => `<p class="empty">${t}</p>`;
@@ -51,10 +51,11 @@
     const usados = clases.map(c => c[1]);
     const desde = Math.min(...usados) - 1, hasta = Math.max(...usados) + 1;
     const hoyIdx = (hoy.getDay() + 6) % 7;
-    let h = `<tr><th>Hora</th>${DIAS.map((d, i) => `<th class="${i === hoyIdx ? "hoy" : ""}">${d}</th>`).join("")}</tr>`;
+    const dv = [...new Set(clases.map(c => c[0]))].sort((a, b) => a - b);
+    let h = `<tr><th>Hora</th>${dv.map(i => `<th class="${i === hoyIdx ? "hoy" : ""}">${DIAS[i]}</th>`).join("")}</tr>`;
     BLOQUES.forEach((hora, b) => {
       if (!usados.includes(b) && b !== desde && b !== hasta) return;
-      h += `<tr><td class="hora">${hora}</td>` + DIAS.map((_, d) => {
+      h += `<tr><td class="hora">${hora}</td>` + dv.map(d => {
         const c = clases.find(x => x[0] === d && x[1] === b);
         return c ? `<td><div class="cls" style="background:${colorDe(c[2])}">${etiquetaDe(c[2])}<small>${c[2]} · ${c[3]}</small></div></td>` : "<td></td>";
       }).join("") + "</tr>";
@@ -73,7 +74,7 @@
       const ini = aFecha(h.inicio), fin = aFecha(h.fin || h.inicio);
       const estado = dia0 > fin ? "pasado" : dia0 >= ini ? "curso" : "prox";
       const dias = estado === "curso" ? Math.round((fin - dia0) / DIA) : Math.round((ini - dia0) / DIA);
-      return { ...h, ini, fin, estado, dias };
+      return { ...h, ini, fin: h.fin ? fin : null, estado, dias };
     });
   }
   function proximoHito(hs) {
