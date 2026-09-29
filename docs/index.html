@@ -38,9 +38,20 @@
     <div id="enlaces"></div>
   </section>
 
+  <section class="card" id="card-privado" hidden>
+    <h2>Perfil académico <span class="muted">· solo tú</span></h2>
+    <div id="perfil"></div>
+    <details>
+      <summary>Editar datos privados (JSON)</summary>
+      <textarea id="json" rows="16" spellcheck="false"></textarea>
+      <p><button class="btn" id="guardar" type="button">Guardar</button> <span class="muted" id="msg"></span></p>
+    </details>
+  </section>
+
   <footer>Fuente: constancias de inscripción y de estudio (29/09/2026) y calendario académico oficial 2026-2 (<a href="https://github.com/krojasalfaro7/UNESR-2026-2/blob/develop/Documentos/CALENDARIO.md">detalle</a>). Datos en <code>assets/data.js</code>.</footer>
 </main>
 <script src="assets/data.js"></script>
 <script src="assets/app.js"></script>
+<script type="module" src="assets/privado.js"></script>
 </body>
 </html>

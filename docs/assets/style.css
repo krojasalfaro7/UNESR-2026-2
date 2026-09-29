@@ -32,8 +32,8 @@ nav.top a:hover { color: var(--text); background: var(--bg); }
 nav.top a.on { color: var(--accent); background: var(--accent-soft); font-weight: 600; }
 nav.top .sp { flex: 1; }
 nav.top a.sga { color: var(--accent); border: 1px solid var(--line); }
-#copiar { background: none; color: var(--muted); border: 1px solid var(--line); border-radius: 99px; padding: 5px 10px; font: inherit; font-size: .8rem; cursor: pointer; white-space: nowrap; }
-#copiar:hover { color: var(--text); border-color: var(--accent); }
+#copiar, #sesion { background: none; color: var(--muted); border: 1px solid var(--line); border-radius: 99px; padding: 5px 10px; font: inherit; font-size: .8rem; cursor: pointer; white-space: nowrap; }
+#copiar:hover, #sesion:hover { color: var(--text); border-color: var(--accent); }
 
 .ok { color: #1a7f4b; font-weight: 600; }
 .bad { color: #c62828; font-weight: 600; }
@@ -87,3 +87,8 @@ th { color: var(--muted); font-weight: 600; font-size: .8rem; text-transform: up
 .mat span { color: var(--muted); font-size: .85rem; display: block; }
 .crumb { font-size: .85rem; color: var(--muted); margin-bottom: 8px; }
 footer { color: var(--muted); font-size: .8rem; margin-top: 24px; }
+
+#json { width: 100%; font: .82rem/1.4 ui-monospace, monospace; background: var(--bg); color: var(--text);
+  border: 1px solid var(--line); border-radius: 8px; padding: 10px; }
+details summary { cursor: pointer; color: var(--accent); margin: 12px 0 8px; }
+.btn { background: var(--accent); color: #fff; border: 0; border-radius: 99px; padding: 6px 16px; font: inherit; cursor: pointer; }

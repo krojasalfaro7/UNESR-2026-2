@@ -4,6 +4,8 @@
   const $ = id => document.getElementById(id);
   const fmt = d => d.toLocaleDateString("es-VE", { day: "numeric", month: "short", year: "numeric" });
   const hoy = new Date();
+  // Datos públicos originales, para restaurarlos al cerrar sesión.
+  const base = MATERIAS.map(m => ({ evaluaciones: m.evaluaciones, tareas: m.tareas, material: m.material }));
 
   // ---- Tema ----
   const raiz = document.documentElement;
@@ -14,7 +16,7 @@
   // ---- Navegación ----
   const links = [`<a href="${root || "./"}" class="${slug ? "" : "on"}">Home</a>`]
     .concat(MATERIAS.map(m => `<a href="${root}${m.slug}/" class="${m.slug === slug ? "on" : ""}">${m.nombre}</a>`));
-  $("nav").innerHTML = `<div class="in">${links.join("")}<span class="sp"></span><a class="sga" href="${SITIO.sga}" target="_blank" rel="noopener">SGA ↗</a><button id="copiar" type="button" title="Copiar enlace del SGA">Copiar enlace</button><button id="tema" type="button" aria-label="Cambiar tema"></button></div>`;
+  $("nav").innerHTML = `<div class="in">${links.join("")}<span class="sp"></span><a class="sga" href="${SITIO.sga}" target="_blank" rel="noopener">SGA ↗</a><button id="sesion" type="button">Iniciar sesión</button><button id="copiar" type="button" title="Copiar enlace del SGA">Copiar enlace</button><button id="tema" type="button" aria-label="Cambiar tema"></button></div>`;
   const btn = $("tema");
   const pintar = () => { btn.textContent = temaActual() === "dark" ? "☀️ Modo claro" : "🌙 Modo oscuro"; };
   btn.onclick = () => {
@@ -178,6 +180,30 @@
       ? `<ul>${m.material.map(x => `<li><a href="${x.url}">${x.titulo}</a></li>`).join("")}</ul>`
       : vacio("Todavía no hay material cargado."));
   }
+
+  // ---- Datos privados (llegan desde assets/privado.js tras iniciar sesión) ----
+  const ETIQUETAS = { condicion: "Condición", ingreso: "Ingreso", plan: "Plan", titulo: "Título", turno: "Turno", promedio: "Promedio (1–5)" };
+  function perfil(d) {
+    const card = $("card-privado");
+    if (!card) return;
+    card.hidden = !d;
+    if (!d) return;
+    const filas = Object.entries(d.perfil || {});
+    $("perfil").innerHTML = filas.length
+      ? `<table><tbody>${filas.map(([k, v]) => `<tr><th>${ETIQUETAS[k] || k}</th><td>${v}</td></tr>`).join("")}</tbody></table>`
+      : vacio("Aún no hay perfil cargado. Usa el editor de abajo.");
+  }
+  document.addEventListener("sesion", e => {
+    const d = e.detail;
+    MATERIAS.forEach((m, i) => {
+      const p = (d && d.materias && d.materias[m.slug]) || {};
+      m.evaluaciones = p.evaluaciones || base[i].evaluaciones;
+      m.tareas = p.tareas || base[i].tareas;
+      m.material = p.material || base[i].material;
+    });
+    slug ? materia() : home();
+    perfil(d);
+  });
 
   slug ? materia() : home();
 })();
