@@ -24,6 +24,12 @@ Pendiente: asignar cada aula a su materia (las constancias no lo indican).
 
 ## Estructura
 
-- `docs/`: fuente de la página de GitHub Pages (`index.html`).
-- `Contabilidad I/`, `Economia General/`: material de cada materia.
+- `docs/`: sitio de GitHub Pages.
+  - `index.html`: Home (resumen, avance del lapso, materias, horario).
+  - `contabilidad-i/`, `economia-general/`: página de cada materia (datos, horario, evaluaciones y notas, tareas, material).
+  - `assets/data.js`: datos del sitio (materias, horario, evaluaciones, tareas). Es lo único que hay que editar para actualizar las páginas.
+  - `assets/app.js`, `assets/style.css`: lógica, navegación y estilos compartidos.
+- `Contabilidad I/`, `Economia General/`: archivos de cada materia (apuntes, PDFs, etc.).
 - Constancias de estudios e inscripción (PDF).
+
+Para agregar una materia nueva: añadirla en `MATERIAS` dentro de `assets/data.js` y copiar una carpeta de `docs/` cambiando `data-materia` por el nuevo `slug`.
