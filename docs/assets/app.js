@@ -249,15 +249,19 @@
   // ---- Datos privados (llegan desde assets/privado.js tras iniciar sesión) ----
   const ETIQUETAS = { nombre: "Nombre", nucleo: "Núcleo", plan: "Plan", titulo: "Título", condicion: "Condición", estado: "Estado",
     ingreso: "Fecha de ingreso", periodo_ingreso: "Período de ingreso", tipo_matricula: "Tipo de matrícula", turno: "Turno",
-    promedio: "Promedio (1–5)", observacion: "Observación" };
+    promedio: "Promedio (1–5)", uc_total: "Unidades de crédito de la carrera", uc_aprobadas: "Unidades de crédito aprobadas", observacion: "Observación" };
   function perfil(d) {
     const card = $("card-privado");
     if (!card) return;
     card.hidden = !d;
     if (!d) return;
     const filas = Object.entries(d.perfil || {});
+    const pf = d.perfil || {};
+    const avance = pf.uc_total && pf.uc_aprobadas != null
+      ? `<div class="bar"><i style="width:${Math.min(100, pf.uc_aprobadas / pf.uc_total * 100)}%"></i></div>
+         <div class="row"><span>Avance de la carrera</span><span>${(pf.uc_aprobadas / pf.uc_total * 100).toFixed(1)}% · ${pf.uc_aprobadas} de ${pf.uc_total} UC · faltan ${pf.uc_total - pf.uc_aprobadas}</span></div>` : "";
     $("perfil").innerHTML = filas.length
-      ? `<table><tbody>${filas.map(([k, v]) => `<tr><th>${ETIQUETAS[k] || k}</th><td>${v}</td></tr>`).join("")}</tbody></table>`
+      ? avance + `<table><tbody>${filas.map(([k, v]) => `<tr><th>${ETIQUETAS[k] || k}</th><td>${esc(v)}</td></tr>`).join("")}</tbody></table>`
       : vacio("Aún no hay perfil cargado. Usa el editor de abajo.");
   }
   document.addEventListener("sesion", e => {
