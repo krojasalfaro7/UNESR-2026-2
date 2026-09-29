@@ -4,8 +4,22 @@ const REPO = "https://github.com/krojasalfaro7/UNESR-2026-2/tree/develop/";
 const SITIO = {
   titulo: "Semestre 2026-2",
   subtitulo: "UNESR · Núcleo Los Teques · Administración mención Informática (plan 1982)",
-  lapso: { inicio: "2026-09-27", fin: "2027-02-12" },
+  // Fechas del calendario académico oficial (Documentos/CALENDARIO.md)
+  lapso: { inicio: "2026-09-28", fin: "2027-02-13" },
+  sga: "https://sga.unesr.edu.ve/#/",
 };
+
+// Hitos del calendario académico. fin: null = fecha única.
+const HITOS = [
+  { nombre: "Modificación de inscripción", inicio: "2026-09-28", fin: "2026-10-03" },
+  { nombre: "Entrega de acuerdo de aprendizaje", inicio: "2026-09-28", fin: "2026-10-03" },
+  { nombre: "Inicio de actividades académicas", inicio: "2026-09-28", fin: null },
+  { nombre: "Receso por festividades navideñas", inicio: "2026-12-16", fin: null, nota: "El calendario no indica el fin; las clases continúan el 11/01." },
+  { nombre: "Continuación de actividades académicas", inicio: "2027-01-11", fin: null },
+  { nombre: "Recuperación académica", inicio: "2027-02-08", fin: "2027-02-13" },
+  { nombre: "Cierre del período", inicio: "2027-02-13", fin: null },
+  { nombre: "Carga de notas y consignación en Control de Estudios", inicio: "2027-02-08", fin: "2027-02-26", nota: "Correo: notasunesrlosteques@gmail.com" },
+];
 
 // aula: código de aula asignado a la materia (null = aún sin asignar)
 // evaluaciones: { nombre, fecha: "AAAA-MM-DD", peso: %, nota: 0-20 | null }

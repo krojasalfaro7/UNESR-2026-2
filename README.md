@@ -4,7 +4,9 @@ Semestre 2026-2 · Universidad Nacional Experimental Simón Rodríguez (Núcleo 
 
 Página de estado: https://krojasalfaro7.github.io/UNESR-2026-2
 
-Lapso académico: 27/09/2026 al 12/02/2027.
+Lapso académico (calendario oficial): 28/09/2026 al 13/02/2027. Las constancias indican 27/09/2026 al 12/02/2027; se usan las fechas del calendario.
+
+SGA: https://sga.unesr.edu.ve/#/
 
 ## Materias
 
@@ -30,6 +32,7 @@ Pendiente: asignar cada aula a su materia (las constancias no lo indican).
   - `assets/data.js`: datos del sitio (materias, horario, evaluaciones, tareas). Es lo único que hay que editar para actualizar las páginas.
   - `assets/app.js`, `assets/style.css`: lógica, navegación y estilos compartidos.
 - `Contabilidad I/`, `Economia General/`: archivos de cada materia (apuntes, PDFs, etc.).
+- `Documentos/CALENDARIO.md`: calendario académico administrativo 2026-2 (los hitos que muestra la página están en `HITOS` de `assets/data.js`).
 - Constancias de estudios e inscripción (PDF).
 
 Para agregar una materia nueva: añadirla en `MATERIAS` dentro de `assets/data.js` y copiar una carpeta de `docs/` cambiando `data-materia` por el nuevo `slug`.
