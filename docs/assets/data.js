@@ -36,13 +36,16 @@ const ESCALA = { min: 1, max: 5, aprobatoria: 4 };
 // evaluaciones: { nombre, fecha: "AAAA-MM-DD", peso: %, nota: 1-5 | null }
 // tareas: { titulo, entrega: "AAAA-MM-DD", hecha: bool }
 // material: { titulo, url }
+// temario: lista de temas del plan de la materia; apuntes: { fecha, titulo, archivo } (ruta dentro de la carpeta de la materia)
 const MATERIAS = [
   { slug: "contabilidad-i", nombre: "Contabilidad I", codigo: "32041", seccion: "10301", horas: 2,
     docente: "Bueno Otamendi, Amilcar Jose de Jesus", aula: "ARMFCG208", uc: 3, cupo: { inscritos: 2, capacidad: 5 }, carpeta: "Contabilidad%20I",
-    evaluaciones: [], tareas: [], material: [] },
+    evaluaciones: [], tareas: [], material: [], temario: [], apuntes: [] },
   { slug: "economia-general", nombre: "Economía General", codigo: "32061", seccion: "10201", horas: 2,
     docente: "Meza Palma, Sergio Roldan", aula: "ARMFCG215", uc: 3, cupo: { inscritos: 4, capacidad: 5 }, carpeta: "Economia%20General",
-    evaluaciones: [], tareas: [], material: [] },
+    evaluaciones: [], tareas: [], material: [],
+    temario: ["Concepto", "Principios", "Métodos", "Leyes", "El problema económico", "El circuito", "El sistema", "Acto", "Actividad", "Microeconomía", "Macroeconomía", "Relación con otras ciencias"],
+    apuntes: [{ fecha: "2026-10-01", titulo: "Introducción: concepto de economía, Adam Smith y oferta y demanda", archivo: "Apuntes/2026-10-01%20Introduccion.md" }] },
 ];
 
 const DIAS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];

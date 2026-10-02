@@ -29,8 +29,8 @@ const $ = id => document.getElementById(id);
 const emit = detail => document.dispatchEvent(new CustomEvent("sesion", { detail }));
 const btn = $("sesion");
 const plantilla = { perfil: {}, materias: {
-  "contabilidad-i": { evaluaciones: [], tareas: [], material: [] },
-  "economia-general": { evaluaciones: [], tareas: [], material: [] },
+  "contabilidad-i": { evaluaciones: [], tareas: [], material: [], contactos: [] },
+  "economia-general": { evaluaciones: [], tareas: [], material: [], contactos: [] },
 } };
 let datos = {};
 let t0 = 0;
@@ -40,7 +40,7 @@ function mensaje(t) {
   if (m) m.textContent = t;
 }
 
-// Guarda un campo de una materia (evaluaciones, tareas o material) y vuelve a pintar.
+// Guarda un campo de una materia (evaluaciones, tareas, material o contactos) y vuelve a pintar.
 window.PRIV = {
   async guardar(slug, campo, arr) {
     const previo = (datos.materias || {})[slug] || {};

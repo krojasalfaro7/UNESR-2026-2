@@ -7,7 +7,7 @@
   let privado = false;
   const esc = t => String(t).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   // Datos públicos originales, para restaurarlos al cerrar sesión.
-  const base = MATERIAS.map(m => ({ evaluaciones: m.evaluaciones, tareas: m.tareas, material: m.material }));
+  const base = MATERIAS.map(m => ({ evaluaciones: m.evaluaciones, tareas: m.tareas, material: m.material, contactos: [] }));
 
   // ---- Tema ----
   const raiz = document.documentElement;
@@ -166,6 +166,13 @@
       $("horario").innerHTML = vacio("Aún no está asignada el aula de esta materia. Ver el horario general en Home.");
     }
 
+    // Temario y apuntes (estáticos, vienen de data.js)
+    $("temario").innerHTML = m.temario.length
+      ? `<ol>${m.temario.map(t => `<li>${esc(t)}</li>`).join("")}</ol>` : vacio("Todavía no hay temario cargado.");
+    $("apuntes").innerHTML = m.apuntes.length
+      ? `<ul>${m.apuntes.map(a => `<li>${fmt(new Date(a.fecha + "T00:00"))} · <a href="${REPO}${m.carpeta}/${a.archivo}" target="_blank" rel="noopener">${esc(a.titulo)} ↗</a></li>`).join("")}</ul>`
+      : vacio("Todavía no hay apuntes cargados.");
+
     // Evaluaciones, tareas y material: solo se pueden editar con la sesión abierta.
     const edit = privado && window.PRIV;
     const msg = t => { const el = $("msg-mat"); if (el) el.textContent = t; };
@@ -214,7 +221,24 @@
       + (edit ? `<form class="frm" id="f-mat"><input name="titulo" placeholder="Título" required>
           <input name="url" type="url" placeholder="https://…" required><button class="btn">Agregar</button></form>` : "");
 
+    // Contactos: datos sensibles, solo existen con la sesión abierta (vienen de Firestore).
+    $("card-contactos").hidden = !edit;
     if (!edit) return;
+    $("contactos").innerHTML = (m.contactos.length
+      ? `<div class="scroll"><table><thead><tr><th>Nombre</th><th>Rol</th><th>Teléfono</th><th>Correo</th><th></th></tr></thead><tbody>${
+          m.contactos.map((c, i) => `<tr><td>${esc(c.nombre)}</td><td>${esc(c.rol || "—")}</td><td>${c.telefono ? `<a href="tel:${esc(c.telefono.replace(/[^\d+]/g, ""))}">${esc(c.telefono)}</a>` : "—"}</td><td>${
+            c.correo ? `<a href="mailto:${esc(c.correo)}">${esc(c.correo)}</a>` : "—"}</td>${x("data-del-contacto")(i)}</tr>`).join("")
+        }</tbody></table></div>`
+      : vacio("Todavía no hay contactos registrados."))
+      + `<form class="frm" id="f-contacto"><input name="nombre" placeholder="Nombre" required><input name="rol" placeholder="Rol (docente, facilitador…)">
+          <input name="telefono" type="tel" placeholder="Teléfono"><input name="correo" type="email" placeholder="Correo"><button class="btn">Agregar</button></form>`;
+    $("f-contacto").onsubmit = ev => {
+      ev.preventDefault();
+      const f = new FormData(ev.target), c = { nombre: f.get("nombre").trim() };
+      ["rol", "telefono", "correo"].forEach(k => { const v = f.get(k).trim(); if (v) c[k] = v; });
+      guardar("contactos", [...m.contactos, c]);
+    };
+    del("data-del-contacto", "contactos", m.contactos, "¿Borrar este contacto?");
 
     $("f-eval").onsubmit = ev => {
       ev.preventDefault();
@@ -275,6 +299,7 @@
       m.evaluaciones = p.evaluaciones || base[i].evaluaciones;
       m.tareas = p.tareas || base[i].tareas;
       m.material = p.material || base[i].material;
+      m.contactos = p.contactos || base[i].contactos;
     });
     slug ? materia() : home();
     perfil(d);

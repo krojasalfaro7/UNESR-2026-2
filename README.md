@@ -28,11 +28,11 @@ Escala de notas: 1 a 5, mínimo aprobatorio 4. Cada materia tiene 3 unidades de 
 
 - `docs/`: sitio de GitHub Pages.
   - `index.html`: Home (resumen, avance del lapso, materias, horario).
-  - `contabilidad-i/`, `economia-general/`: página de cada materia (datos, horario, evaluaciones y notas, tareas, material).
+  - `contabilidad-i/`, `economia-general/`: página de cada materia (datos, horario, temario, apuntes, evaluaciones y notas, tareas, material).
   - `assets/data.js`: datos del sitio (materias, horario, evaluaciones, tareas). Es lo único que hay que editar para actualizar las páginas.
   - `assets/app.js`, `assets/style.css`: lógica, navegación y estilos compartidos.
-- `Contabilidad I/`, `Economia General/`: archivos de cada materia (apuntes, PDFs, etc.).
+- `Contabilidad I/`, `Economia General/`: archivos de cada materia (README con temario, `Apuntes/` con las notas de clase en Markdown, PDFs, etc.).
 - `Documentos/CALENDARIO.md`: calendario académico administrativo 2026-2 (los hitos que muestra la página están en `HITOS` de `assets/data.js`).
-- `privado/`: documentos personales (constancias, datos de la API). Está en `.gitignore` y no se sube al repo.
+- `privado/`: documentos personales (constancias, datos de la API, contactos). Está en `.gitignore` y no se sube al repo.
 
 Para agregar una materia nueva: añadirla en `MATERIAS` dentro de `assets/data.js` y copiar una carpeta de `docs/` cambiando `data-materia` por el nuevo `slug`.
