@@ -29,15 +29,21 @@
   };
   pintar();
 
-  $("copiar").onclick = async () => {
-    const b = $("copiar");
-    try { await navigator.clipboard.writeText(SITIO.sga); }
+  const copiarTexto = async texto => {
+    try { await navigator.clipboard.writeText(texto); }
     catch (e) {
       const t = document.createElement("textarea");
-      t.value = SITIO.sga; document.body.appendChild(t); t.select();
+      t.value = texto; document.body.appendChild(t); t.select();
       try { document.execCommand("copy"); } catch (e2) {}
       t.remove();
     }
+  };
+  // Número para wa.me: solo dígitos, con prefijo de país (un 0 inicial se toma como Venezuela, 58).
+  const waNumero = tel => { const d = tel.replace(/\D/g, ""); return d.startsWith("0") ? "58" + d.slice(1) : d; };
+
+  $("copiar").onclick = async () => {
+    const b = $("copiar");
+    await copiarTexto(SITIO.sga);
     b.textContent = "¡Copiado!";
     setTimeout(() => { b.textContent = "Copiar SGA"; }, 1500);
   };
@@ -226,12 +232,19 @@
     if (!edit) return;
     $("contactos").innerHTML = (m.contactos.length
       ? `<div class="scroll"><table><thead><tr><th>Nombre</th><th>Rol</th><th>Teléfono</th><th>Correo</th><th></th></tr></thead><tbody>${
-          m.contactos.map((c, i) => `<tr><td>${esc(c.nombre)}</td><td>${esc(c.rol || "—")}</td><td>${c.telefono ? `<a href="tel:${esc(c.telefono.replace(/[^\d+]/g, ""))}">${esc(c.telefono)}</a>` : "—"}</td><td>${
-            c.correo ? `<a href="mailto:${esc(c.correo)}">${esc(c.correo)}</a>` : "—"}</td>${x("data-del-contacto")(i)}</tr>`).join("")
+          m.contactos.map((c, i) => `<tr><td>${esc(c.nombre)}</td><td>${esc(c.rol || "—")}</td><td>${c.telefono ? `<a href="tel:${esc(c.telefono.replace(/[^\d+]/g, ""))}">${esc(c.telefono)}</a>
+            <button class="x cp" data-copiar="${esc(c.telefono)}" title="Copiar teléfono">Copiar</button>
+            <a class="wa" href="https://wa.me/${waNumero(c.telefono)}" target="_blank" rel="noopener" title="Abrir en WhatsApp">WhatsApp ↗</a>` : "—"}</td><td>${
+            c.correo ? `<a href="mailto:${esc(c.correo)}">${esc(c.correo)}</a> <button class="x cp" data-copiar="${esc(c.correo)}" title="Copiar correo">Copiar</button>` : "—"}</td>${x("data-del-contacto")(i)}</tr>`).join("")
         }</tbody></table></div>`
       : vacio("Todavía no hay contactos registrados."))
       + `<form class="frm" id="f-contacto"><input name="nombre" placeholder="Nombre" required><input name="rol" placeholder="Rol (docente, facilitador…)">
           <input name="telefono" type="tel" placeholder="Teléfono"><input name="correo" type="email" placeholder="Correo"><button class="btn">Agregar</button></form>`;
+    $("contactos").querySelectorAll("[data-copiar]").forEach(b => b.onclick = async () => {
+      await copiarTexto(b.dataset.copiar);
+      b.textContent = "¡Copiado!";
+      setTimeout(() => { b.textContent = "Copiar"; }, 1500);
+    });
     $("f-contacto").onsubmit = ev => {
       ev.preventDefault();
       const f = new FormData(ev.target), c = { nombre: f.get("nombre").trim() };
