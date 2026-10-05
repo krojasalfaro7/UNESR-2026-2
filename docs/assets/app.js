@@ -360,11 +360,12 @@
     const d = e.detail;
     privado = !!d;
     MATERIAS.forEach((m, i) => {
+      // Un arreglo vacío en Firestore no debe tapar los datos públicos.
       const p = (d && d.materias && d.materias[m.slug]) || {};
-      m.evaluaciones = p.evaluaciones || base[i].evaluaciones;
-      m.tareas = p.tareas || base[i].tareas;
-      m.material = p.material || base[i].material;
-      m.contactos = p.contactos || base[i].contactos;
+      m.evaluaciones = (p.evaluaciones && p.evaluaciones.length) ? p.evaluaciones : base[i].evaluaciones;
+      m.tareas = (p.tareas && p.tareas.length) ? p.tareas : base[i].tareas;
+      m.material = (p.material && p.material.length) ? p.material : base[i].material;
+      m.contactos = (p.contactos && p.contactos.length) ? p.contactos : base[i].contactos;
     });
     slug ? materia() : home();
     perfil(d);

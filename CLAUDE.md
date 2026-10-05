@@ -4,7 +4,7 @@ Sitio de GitHub Pages (`docs/`) para llevar el semestre: materias, horario, nota
 
 ## Convenciones
 
-- Rama de trabajo: `develop`. `main` es la rama principal para PRs.
+- Una sola rama: `develop` (Pages se publica desde ahí). Commit y push directo, sin PRs.
 - Los datos públicos del sitio se editan solo en `docs/assets/data.js`. Para una materia nueva, ver el final de `README.md`.
 - El sitio es estático (HTML + JS sin build). Validar sintaxis con `node --check docs/assets/app.js`.
 - Antes de cada commit que toque `docs/assets/`, correr `scripts/version.sh`: agrega `?v=` a los CSS/JS de las páginas para que el navegador no use caché vieja (Pages cachea 10 min).
