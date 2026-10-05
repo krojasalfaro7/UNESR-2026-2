@@ -8,18 +8,28 @@
 
 ## Temario
 
-1. Concepto
-2. Principios
-3. Métodos
-4. Leyes
-5. El problema económico
-6. El circuito
-7. El sistema
-8. Acto
-9. Actividad
-10. Microeconomía
-11. Macroeconomía
-12. Relación con otras ciencias
+1. La ciencia económica
+2. La producción y el equilibrio económico
+3. El capitalismo y el imperialismo
+4. El socialismo y el imperialismo soviético
+5. La demanda
+6. La oferta
+7. Los mercados
+8. Teoría de la moneda y el crédito
+9. Producto bruto, inflación y desempleo
+10. Objetivos e instrumentos de la política económica
+
+## Evaluaciones
+
+| Evaluación | Peso | Fecha (sec. 10201) |
+|---|---|---|
+| I Evaluación: Ensayo (unidades I y II) | 25% | 22/10/2026 |
+| II Evaluación: Exposiciones en grupo (unidades III y IV) | 25% | 12/11/2026 |
+| III Evaluación: Taller en grupo (unidades V, VI y VII) | 25% | 03/12/2026 |
+| IV Evaluación: Debate en grupo (unidades VIII, IX y X) | 25% | 28/01/2027 |
+| Prueba de recuperación (oral, objetivos no alcanzados) | – | 03/02/2027 |
+
+Fuente: contrato de aprendizaje del 01/10/2026. Bibliografía en [Bibliografia.md](Bibliografia.md).
 
 ## Apuntes
 
