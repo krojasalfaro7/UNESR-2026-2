@@ -16,8 +16,8 @@
   try { const t = localStorage.getItem("tema"); if (t) raiz.dataset.theme = t; } catch (e) {}
 
   // ---- Navegación ----
-  const links = [`<a href="${root || "./"}" class="${slug ? "" : "on"}">Home</a>`]
-    .concat(MATERIAS.map(m => `<a href="${root}${m.slug}/" class="${m.slug === slug ? "on" : ""}">${m.nombre}</a>`));
+  const links = [`<a href="${root || "./"}" class="${slug ? "" : "on"}" ${slug ? "" : 'aria-current="page"'}>Home</a>`]
+    .concat(MATERIAS.map(m => `<a href="${root}${m.slug}/" class="${m.slug === slug ? "on" : ""}" ${m.slug === slug ? 'aria-current="page"' : ""}>${m.nombre}</a>`));
   $("nav").innerHTML = `<div class="in"><div class="links">${links.join("")}</div><div class="acts"><a class="sga" href="${SITIO.sga}" target="_blank" rel="noopener">SGA ↗</a><button id="sesion" type="button">Iniciar sesión</button><button id="copiar" type="button" title="Copiar enlace del SGA">Copiar SGA</button><button id="tema" type="button" aria-label="Cambiar tema"></button></div></div>`;
   const btn = $("tema");
   const pintar = () => { btn.textContent = temaActual() === "dark" ? "☀️ Claro" : "🌙 Oscuro"; };
@@ -68,6 +68,42 @@
     });
     return `<div class="scroll"><table class="grid">${h}</table></div>`;
   }
+
+  // ---- Próxima clase ----
+  // "05:00 - 05:40 pm" -> [inicio, fin] en minutos; el am/pm del bloque aplica a ambas horas.
+  const rango = b => { const [a, z] = b.split(" - "), ap = z.slice(-2); return [minutos(`${a} ${ap}`), minutos(z)]; };
+  const minutos = t => { const [, h, mi, ap] = t.match(/(\d+):(\d+) (am|pm)/); return (Number(h) % 12 + (ap === "pm" ? 12 : 0)) * 60 + Number(mi); };
+  const DIA_LARGO = d => d.toLocaleDateString("es-VE", { weekday: "long", day: "numeric", month: "short" });
+  const hora12 = d => d.toLocaleTimeString("es-VE", { hour: "numeric", minute: "2-digit", hour12: true }).replace(/\s/g, " ").toLowerCase().replace(/ ?([ap])\. ?m\./, " $1m");
+  // Une los bloques consecutivos de un mismo día y aula en una sola clase.
+  function clasesSesion(lista) {
+    const ord = [...lista].sort((a, b) => a[0] - b[0] || a[1] - b[1]), out = [];
+    ord.forEach(c => {
+      const u = out[out.length - 1];
+      if (u && u.dia === c[0] && u.aula === c[2] && u.b2 + 1 === c[1]) u.b2 = c[1];
+      else out.push({ dia: c[0], b1: c[1], b2: c[1], aula: c[2], ambiente: c[3] });
+    });
+    return out;
+  }
+  // Próxima ocurrencia (o clase en curso) a partir de ahora.
+  function proximaClase(lista) {
+    let mejor = null;
+    clasesSesion(lista).forEach(c => {
+      const ini = rango(BLOQUES[c.b1])[0];
+      let fin = rango(BLOQUES[c.b2])[1];
+      if (fin <= ini) fin += 12 * 60;
+      for (let n = 0; n < 8; n++) {
+        const f = new Date(dia0); f.setDate(f.getDate() + n);
+        if ((f.getDay() + 6) % 7 !== c.dia) continue;
+        const a = new Date(f.getTime() + ini * 6e4), z = new Date(f.getTime() + fin * 6e4);
+        if (z <= hoy) continue;
+        if (!mejor || a < mejor.ini) mejor = { ...c, ini: a, fin: z, enCurso: a <= hoy };
+        break;
+      }
+    });
+    return mejor;
+  }
+  const cuandoClase = c => c.enCurso ? "en curso ahora" : c.ini < new Date(dia0.getTime() + DIA) ? "hoy" : cuando(Math.round((new Date(c.ini.getFullYear(), c.ini.getMonth(), c.ini.getDate()) - dia0) / DIA));
 
   // ---- Hitos del calendario ----
   const DIA = 864e5;
@@ -128,8 +164,18 @@
     $("ini").textContent = fmt(ini);
     $("fin").textContent = fmt(fin);
     $("pct").textContent = `${pct}% · día ${pasado} de ${total}`;
-    $("mats").innerHTML = MATERIAS.map(m =>
-      `<a class="mat" href="${m.slug}/"><b>${m.nombre}</b><span>${m.codigo} · sección ${m.seccion} · ${m.horas} h</span><span>${m.docente}</span></a>`).join("");
+    const nombreAula = a => (MATERIAS.find(m => m.aula === a) || {}).nombre || a;
+    const pc = proximaClase(CLASES);
+    $("proxima").innerHTML = pc
+      ? `<span class="etq">Próxima clase · ${cuandoClase(pc)}</span><b>${nombreAula(pc.aula)}</b>
+         <span>${DIA_LARGO(pc.ini)} · ${hora12(pc.ini)} – ${hora12(pc.fin)}</span><span class="muted">${pc.aula} · ${pc.ambiente}</span>`
+      : vacio("Sin clases programadas.");
+    $("mats").innerHTML = MATERIAS.map(m => {
+      const c = m.aula && proximaClase(CLASES.filter(x => x[2] === m.aula));
+      const pend = m.tareas.filter(t => !t.hecha).length;
+      return `<a class="mat" href="${m.slug}/" style="--c:${COLORES[m.aula] || "var(--accent)"}"><b>${m.nombre}</b><span>${m.codigo} · sección ${m.seccion} · ${m.horas} h · ${m.docente}</span>
+        ${c ? `<span class="prox">Próxima clase: ${DIA_LARGO(c.ini)}, ${hora12(c.ini)}</span>` : ""}${pend ? `<span class="prox">${pend} tarea${pend > 1 ? "s" : ""} pendiente${pend > 1 ? "s" : ""}</span>` : ""}</a>`;
+    }).join("");
     $("hitos").innerHTML = timeline(hs);
     const nombreDe = a => (MATERIAS.find(m => m.aula === a) || {}).nombre || a;
     $("horario").innerHTML = horario(CLASES, a => COLORES[a] || "var(--accent)", nombreDe);
@@ -148,13 +194,14 @@
     const pesoEval = notas.reduce((s, e) => s + e.peso, 0);
     const prom = pesoEval ? notas.reduce((s, e) => s + e.nota * e.peso, 0) / pesoEval : null;
     const cls = n => n >= ESCALA.aprobatoria ? "ok" : "bad";
+    const pcm = m.aula ? proximaClase(CLASES.filter(x => x[2] === m.aula)) : null;
     $("kpis").innerHTML = kpis([
       [m.evaluaciones.length, "evaluaciones"],
       [pend, "tareas pendientes"],
       [prom != null ? `<span class="${cls(prom)}">${prom.toFixed(1)}</span>` : "—",
         `promedio ponderado (escala ${ESCALA.min}–${ESCALA.max}, mínimo ${ESCALA.aprobatoria})`],
       [m.material.length, "recursos de material"],
-    ]);
+    ].concat(pcm ? [[`<span class="peq">${DIA_LARGO(pcm.ini)}</span>`, `próxima clase · ${hora12(pcm.ini)} – ${hora12(pcm.fin)}`]] : []));
 
     $("datos").innerHTML = `<table><tbody>
       <tr><th>Código</th><td>${m.codigo}</td></tr>
@@ -209,10 +256,15 @@
           <input class="mini" name="nota" type="number" min="${ESCALA.min}" max="${ESCALA.max}" step="0.1" placeholder="Nota"><button class="btn">Agregar</button></form>` : "");
 
     // Tareas
+    const urgencia = t => {
+      if (t.hecha || !t.entrega) return "";
+      const n = Math.round((aFecha(t.entrega) - dia0) / DIA);
+      return n < 0 ? ` <span class="pill mal">Vencida</span>` : n <= 2 ? ` <span class="pill aviso">${n === 0 ? "Vence hoy" : `Vence ${cuando(n)}`}</span>` : "";
+    };
     $("tareas").innerHTML = (m.tareas.length
       ? `<div class="scroll"><table><thead><tr><th>Tarea</th><th>Entrega</th><th>Estado</th>${edit ? "<th></th>" : ""}</tr></thead><tbody>${
           m.tareas.map((t, i) => `<tr><td>${esc(t.titulo)}</td><td>${fechaTxt(t.entrega)}</td><td>${
-            edit ? `<label><input type="checkbox" data-hecha="${i}" ${t.hecha ? "checked" : ""}> Hecha</label>` : t.hecha ? "Hecha" : "Pendiente"}</td>${x("data-del-tarea")(i)}</tr>`).join("")
+            edit ? `<label><input type="checkbox" data-hecha="${i}" ${t.hecha ? "checked" : ""}> Hecha</label>` : t.hecha ? "Hecha" : "Pendiente"}${urgencia(t)}</td>${x("data-del-tarea")(i)}</tr>`).join("")
         }</tbody></table></div>`
       : vacio("Todavía no hay tareas registradas."))
       + (edit ? `<form class="frm" id="f-tarea"><input name="titulo" placeholder="Tarea" required>
