@@ -2,7 +2,7 @@
 
 Semestre 2026-2 · Universidad Nacional Experimental Simón Rodríguez (Núcleo Los Teques) · Administración mención Informática.
 
-Página de estado: https://krojasalfaro7.github.io/UNESR-2026-2
+Página de estado: https://unesr.ubbedigital.com
 
 Lapso académico (calendario oficial): 28/09/2026 al 13/02/2027. Las constancias indican 27/09/2026 al 12/02/2027; se usan las fechas del calendario.
 
