@@ -34,5 +34,6 @@ Fuente: contrato de aprendizaje del 01/10/2026. Bibliografía en [Bibliografia.m
 ## Apuntes
 
 - [01/10/2026 · Introducción](Apuntes/2026-10-01%20Introduccion.md)
+- [08/10/2026 · Principios, métodos, problema económico y circuito económico](Apuntes/2026-10-08%20Principios%20y%20circuito%20economico.md)
 
 Los datos de contacto del docente están en `privado/` (no se suben al repo).

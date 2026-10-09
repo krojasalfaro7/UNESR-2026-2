@@ -69,7 +69,8 @@ const MATERIAS = [
       "IX. Producto bruto, inflación y desempleo",
       "X. Objetivos e instrumentos de la política económica",
     ],
-    apuntes: [{ fecha: "2026-10-01", titulo: "Introducción: concepto de economía, Adam Smith y oferta y demanda", archivo: "Apuntes/2026-10-01%20Introduccion.md" }] },
+    apuntes: [{ fecha: "2026-10-01", titulo: "Introducción: concepto de economía, Adam Smith y oferta y demanda", archivo: "Apuntes/2026-10-01%20Introduccion.md" },
+      { fecha: "2026-10-08", titulo: "Principios, métodos, problema económico y circuito económico", archivo: "Apuntes/2026-10-08%20Principios%20y%20circuito%20economico.md" }] },
 ];
 
 const DIAS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
