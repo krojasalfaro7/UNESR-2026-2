@@ -80,6 +80,8 @@ Cuenta "T" dibujada en la pizarra:
 1. Se compraron 5 computadoras por 1.000 USD y se hizo una transferencia bancaria. En esta operación se afectan la cuenta **Banco** y **Activo**.
 2. Un concesionario de automóviles vendió 2 carros (Toyota Corolla) valorados en 100 mil USD y el cliente hizo la transferencia bancaria. Los carros, para el concesionario, son un activo.
 
+3. Se pagó el servicio de aseo por 8 mil Bs por transferencia. Afecta a la cuenta de gastos (egreso).
+
 Por confirmar: si los 100 mil USD son el total de los 2 carros o el valor de cada uno.
 
 ## Ejercicios de clasificación de cuentas (Capítulo II)
