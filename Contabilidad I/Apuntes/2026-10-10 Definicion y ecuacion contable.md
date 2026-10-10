@@ -30,6 +30,11 @@ Lo que tengo para pagar. Ejemplo dado: banco.
 - Tienen relación con la ecuación patrimonial (Activos = Pasivos + Capital).
 - Las cuentas reales determinan el patrimonio de la empresa.
 
+## Cuentas nominales
+
+- Egresos e Ingresos son cuentas **nominales**.
+- Determinan la ganancia y la pérdida.
+
 ## Ejemplo: cuenta Banco (debe y haber)
 
 Cuenta "T" dibujada en la pizarra:
