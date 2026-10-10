@@ -35,6 +35,29 @@ Lo que tengo para pagar. Ejemplo dado: banco.
 - Egresos e Ingresos son cuentas **nominales**.
 - Determinan la ganancia y la pérdida.
 
+## Esquema de cuentas "T" (pizarra)
+
+Cada cuenta se dibuja como una T: Debe (D) a la izquierda y Haber (H) a la derecha.
+
+**Cuentas reales**
+
+| Cuenta | Debe | Haber |
+|---|---|---|
+| Activo | + | − |
+| Pasivo | − | + |
+| Capital | − | + |
+
+**Cuentas nominales**
+
+| Cuenta | Debe | Haber |
+|---|---|---|
+| Egreso | + (gastos, compras) | |
+| Ingreso | − | + (ventas) |
+
+- En la pizarra, Egreso muestra el "+" en el debe, con la anotación "gastos / compras" al lado. Del lado del haber no se ve nada escrito.
+- Ingreso lleva una flecha hacia "Ventas".
+- Ejemplo de ventas dibujado: cuenta **Vta** con 10 en el debe (encerrado) y 40 en el haber, y cuenta **Devolución Vtas** con 10 en el debe. Por confirmar cómo explicó el profe la relación entre ambas.
+
 ## Ejemplo: cuenta Banco (debe y haber)
 
 Cuenta "T" dibujada en la pizarra:
@@ -51,6 +74,13 @@ Cuenta "T" dibujada en la pizarra:
 - Saldo = 500.000 − 1.130 = **498.870**, que queda del lado del debe (saldo deudor).
 - Idea: en la cuenta Banco, lo que entra va al debe y lo que sale va al haber.
 - A la derecha de la pizarra había otra cuenta que empieza por "Ac…" (con columna D), tapada en la foto.
+
+## Ejercicios en clase
+
+1. Se compraron 5 computadoras por 1.000 USD y se hizo una transferencia bancaria. En esta operación se afectan la cuenta **Banco** y **Activo**.
+2. Un concesionario de automóviles vendió 2 carros (Toyota Corolla) valorados en 100 mil USD y el cliente hizo la transferencia bancaria. Los carros, para el concesionario, son un activo.
+
+Por confirmar: si los 100 mil USD son el total de los 2 carros o el valor de cada uno.
 
 ## Ejercicios de clasificación de cuentas (Capítulo II)
 
