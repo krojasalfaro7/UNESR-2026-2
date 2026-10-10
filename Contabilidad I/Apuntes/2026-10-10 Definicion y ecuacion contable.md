@@ -24,6 +24,12 @@ Obligaciones: deudas, cuentas por pagar. Ejemplo: las cuotas de Cashea.
 
 Lo que tengo para pagar. Ejemplo dado: banco.
 
+## Cuentas reales
+
+- Activo, Pasivo y Capital son cuentas **reales**.
+- Tienen relación con la ecuación patrimonial (Activos = Pasivos + Capital).
+- Las cuentas reales determinan el patrimonio de la empresa.
+
 ## Ejemplo: cuenta Banco (debe y haber)
 
 Cuenta "T" dibujada en la pizarra:
