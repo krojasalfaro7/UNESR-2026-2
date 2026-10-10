@@ -94,6 +94,10 @@ Material impreso de la clase. Se clasifican las cuentas marcando una X en la cas
 
 Estado: por resolver.
 
+## Pendientes
+
+- Comprar un libro diario.
+
 ## Por consolidar
 
 - La nota sobre capital ("lo que tengo para pagar, ejemplo banco") conviene contrastarla con el profesor: en el ejemplo resuelto de la hoja, Banco es una cuenta de Activo.
