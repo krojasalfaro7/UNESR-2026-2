@@ -96,6 +96,7 @@ Estado: por resolver.
 
 ## Pendientes
 
+- Sacar copia de las hojas de los ejercicios.
 - Comprar un libro diario.
 
 ## Por consolidar
