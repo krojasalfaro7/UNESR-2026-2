@@ -41,7 +41,8 @@ const ESCALA = { min: 1, max: 5, aprobatoria: 4 };
 const MATERIAS = [
   { slug: "contabilidad-i", nombre: "Contabilidad I", codigo: "32041", seccion: "10301", horas: 2,
     docente: "Bueno Otamendi, Amilcar Jose de Jesus", aula: "ARMFCG208", uc: 3, cupo: { inscritos: 2, capacidad: 5 }, carpeta: "Contabilidad%20I",
-    evaluaciones: [], tareas: [], material: [], temario: [], apuntes: [] },
+    evaluaciones: [], tareas: [], material: [], temario: [],
+    apuntes: [{ fecha: "2026-10-10", titulo: "Definición de contabilidad y ecuación contable", archivo: "Apuntes/2026-10-10%20Definicion%20y%20ecuacion%20contable.md" }] },
   { slug: "economia-general", nombre: "Economía General", codigo: "32061", seccion: "10201", horas: 2,
     docente: "Meza Palma, Sergio Roldan", aula: "ARMFCG215", uc: 3, cupo: { inscritos: 4, capacidad: 5 }, carpeta: "Economia%20General",
     evaluaciones: [
