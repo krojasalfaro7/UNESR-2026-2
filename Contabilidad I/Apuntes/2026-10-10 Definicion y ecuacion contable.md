@@ -81,10 +81,12 @@ Se clasifican las cuentas marcando una X en la casilla que corresponda: Reales (
 
 Estado: por resolver.
 
-## Pendientes
+## Pendientes / tareas
 
 - Sacar copia de las hojas de los ejercicios.
-- Comprar un libro diario.
+- Hacer los ejercicios de las hojas (al parecer hay que etiquetarlos, por confirmar cómo).
+- Comprar el libro diario.
+- Traer calculadora.
 
 ## Por confirmar con el profesor
 
