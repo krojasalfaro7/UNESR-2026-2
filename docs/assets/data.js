@@ -52,7 +52,7 @@ const MATERIAS = [
       { nombre: "IV Evaluación: Debate en grupo (unidades VIII, IX y X)", fecha: "2027-01-28", peso: 25, nota: null },
     ],
     tareas: [
-      { titulo: "Enviar por correo el ensayo (unidades I y II)", entrega: "2026-10-22", hecha: false },
+      { titulo: "Enviar por correo el ensayo (unidades I y II)", entrega: "2026-10-22", hecha: true },
       { titulo: "Enviar por correo la monografía (unidades III y IV)", entrega: "2026-11-12", hecha: false },
       { titulo: "Enviar por correo la monografía (unidades VIII, IX y X)", entrega: "2027-01-28", hecha: false },
     ],
